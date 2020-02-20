@@ -35,7 +35,7 @@
                     <div class="homeWelcome" v-if="this.$router.currentRoute.path=='/home'">
                         欢迎来到酒店内控管理系统
                     </div>
-                    <router-view/>
+                    <router-view class="homeArea"/>
                 </el-main>
             </el-container>
         </el-container>
@@ -81,6 +81,10 @@
 </script>
 
 <style scoped>
+    .homeArea{
+        margin-top: 10px;
+    }
+
     .homeWelcome{
         text-align: center;
         font-size: 50px;

@@ -44,7 +44,8 @@
                                     //保存用户信息至session
                                     window.sessionStorage.setItem('user',JSON.stringify(resp.obj));
                                     //页面跳转到home
-                                    this.$router.replace('/home');
+                                    let path = this.$route.query.redirect;
+                                    this.$router.replace((path=='/'||path==undefined)?'/home':path);
                                     //alert(JSON.stringify(resp));
                                 }
                             }

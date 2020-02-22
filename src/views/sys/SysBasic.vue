@@ -11,11 +11,11 @@
 </template>
 
 <script>
-    import DepMana from "../../component/basic/DepMana";
-    import EcMana from "../../component/basic/EcMana";
-    import JobLevel from "../../component/basic/JobLevel";
-    import PermissMana from "../../component/basic/PermissMana";
-    import PosMana from "../../component/basic/PosMana";
+    import DepMana from "../../components/sys/basic/DepMana";
+    import EcMana from "../../components/sys/basic/EcMana";
+    import JobLevel from "../../components/sys/basic/JobLevel";
+    import PermissMana from "../../components/sys/basic/PermissMana";
+    import PosMana from "../../components/sys/basic/PosMana";
 
     export default {
         name: "SysBasic",

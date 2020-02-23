@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {Message} from 'element-ui';
+import  router from '../router';
 
 //设置响应拦截器
 axios.interceptors.response.use(success => {
@@ -19,6 +20,8 @@ axios.interceptors.response.use(success => {
         } else if (error.response.status == 403) {
             Message.error({message: '权限不足,请联系管理员'})
         } else if (error.response.status == 401) {
+            //session过期重定向到login页
+            router.replace('/')
             Message.error({message: '尚未登录,请先登录'})
         } else {
             if (error.response.data.msg) {

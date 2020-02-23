@@ -21,7 +21,7 @@ Vue.prototype.postKeyValueRequest = postKeyValueRequest;
 
 Vue.config.productionTip = false
 
-Vue.use(ElementUI);
+Vue.use(ElementUI,{size:'small'});
 
 //路由过滤器
 router.beforeEach((to, from, next) => {

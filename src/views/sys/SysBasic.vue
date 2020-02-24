@@ -21,7 +21,7 @@
         name: "SysBasic",
         data(){
             return {
-                activeName:'second'
+                activeName:'first'
             }
         },
         components:{

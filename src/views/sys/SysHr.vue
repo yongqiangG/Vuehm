@@ -80,6 +80,9 @@
             this.initHrs()
         },
         methods: {
+            showPop(){
+                this.initRoles();
+            },
             searchBtn() {
 
             },

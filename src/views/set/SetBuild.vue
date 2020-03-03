@@ -2,21 +2,21 @@
     <div>
         <div>
             <el-input
-                    class="posAddInput"
+                    class="addBuilding"
                     size="small"
-                    placeholder="请输入新增职位"
+                    placeholder="请输入新增楼栋名称"
                     prefix-icon="el-icon-plus"
-                    v-model="pos.name">
+                    v-model="building.name">
             </el-input>
-            <el-button type="primary" size="small" style="margin-left: 8px" @click="addPos">新增职位</el-button>
+            <el-button type="primary" size="small" style="margin-left: 8px" @click="addBuilding">新增楼栋</el-button>
         </div>
         <div>
             <el-table
-                    :data="positions"
+                    :data="buildings"
                     @selection-change="handleSelectionChange"
                     border
                     stripe
-                    class="posTable">
+                    class="buildTable">
                 <el-table-column
                         type="selection"
                         width="55">
@@ -28,45 +28,35 @@
                 </el-table-column>
                 <el-table-column
                         prop="name"
-                        label="职位"
-                        width="150">
-                </el-table-column>
-                <el-table-column
-                        prop="createDate"
-                        label="创建时间"
-                        width="150">
-                </el-table-column>
-                <el-table-column
-                        prop="enabled"
-                        label="是否禁用"
-                        width="100">
+                        label="楼栋名称"
+                        width="350">
                 </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <el-button
                                 size="mini"
-                                @click="handleEdit(scope.$index, scope.row)">编辑
+                                @click="handleEdit(scope.row)">编辑
                         </el-button>
                         <el-button
                                 size="mini"
                                 type="danger"
-                                @click="handleDelete(scope.$index, scope.row)">删除
+                                @click="handleDelete(scope.row)">删除
                         </el-button>
                     </template>
                 </el-table-column>
             </el-table>
-            <el-button type="danger" size="small" class="posDelete" @click="deleteMany" :disabled="multipleSelection.length==0">批量删除</el-button>
+            <el-button type="danger" size="small" class="buildDelete" @click="deleteMany" :disabled="multipleSelection.length==0">批量删除</el-button>
         </div>
         <div>
             <el-dialog
-                    title="修改职位信息"
+                    title="修改楼栋名称"
                     :visible.sync="dialogVisible"
                     width="30%">
-                <el-tag>职位</el-tag>
+                <el-tag>楼栋名称</el-tag>
                 <el-input
                         size="small"
                         style="width: 200px;margin-left: 8px"
-                        v-model="updatePosName.name">
+                        v-model="updateBuilding.name">
                 </el-input>
                 <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
@@ -74,57 +64,81 @@
   </span>
             </el-dialog>
         </div>
-
     </div>
 </template>
 
 <script>
     export default {
-        name: "PosMana",
-        data() {
-            return {
-                pos: {
-                    name: ''
-                },
-                positions: [],
-                dialogVisible:false,
-                updatePosName:{
-                    id:null,
+        name: "SetBuild",
+        data(){
+            return{
+                building:{
                     name:''
                 },
-                multipleSelection:[]
+                buildings:[],
+                multipleSelection:[],
+                dialogVisible:false,
+                updateBuilding:{
+                    name:'',
+                    id:null
+                }
             }
         },
         mounted() {
-            this.initPosTable();
+            this.initBuilding();
         },
-        methods: {
-            initPosTable(){
-                this.getRequest('/system/basic/pos/').then(resp => {
-                    this.positions = resp;
-                })
-            },
-            addPos() {
-                if (this.pos.name) {
-                    this.postRequest('/system/basic/pos/', this.pos).then(resp => {
-                        if (resp) {
-                            this.initPosTable();
-                            this.pos.name = '';
+        methods:{
+            updateSubmit(){
+                if(this.updateBuilding.name){
+                    this.putRequest("/setting/building/",this.updateBuilding).then(resp=>{
+                        if(resp){
+                            this.dialogVisible=false;
+                            this.initBuilding();
                         }
                     })
+                }else{
+                    this.$message.error("楼栋名称不能为空")
                 }
             },
-            handleDelete(index, row) {
-                this.$confirm('此操作将永久删除['+row.name+']该职位, 是否继续?', '提示', {
+            initBuilding(){
+                this.getRequest("/setting/building/").then(resp=>{
+                    if(resp){
+                        this.buildings=resp;
+                    }
+                })
+            },
+            addBuilding(){
+                if(this.building.name){
+                    this.postRequest("/setting/building/", this.building).then(resp => {
+                        if (resp) {
+                            this.building.name = '';
+                            this.initBuilding();
+                        }
+                    })
+                }else {
+                    this.$message.error("楼栋名称不能为空")
+                }
+            },
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+            handleEdit(row){
+                this.updateBuilding.id=row.id;
+                this.updateBuilding.name=row.name;
+                this.dialogVisible=true;
+
+            },
+            handleDelete(row){
+                this.$confirm('此操作将永久删除[ '+row.name+' ]该楼栋, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
                     let ids = '?';
                     ids += 'ids=' + row.id;
-                    this.deleteRequest('/system/basic/pos/' + ids).then(resp => {
+                    this.deleteRequest('/setting/building/' + ids).then(resp => {
                         if (resp) {
-                            this.initPosTable();
+                            this.initBuilding();
                         }
                     })
                 }).catch(() => {
@@ -134,25 +148,8 @@
                     });
                 });
             },
-            handleEdit(index, row) {
-                this.updatePosName.name=row.name;
-                this.updatePosName.id=row.id;
-                this.dialogVisible=true;
-
-            },
-            updateSubmit(){
-                this.putRequest('/system/basic/pos/',this.updatePosName).then(resp=>{
-                    if(resp){
-                        this.dialogVisible=false;
-                        this.initPosTable();
-                    }
-                })
-            },
-            handleSelectionChange(val) {
-                this.multipleSelection = val;
-            },
             deleteMany(){
-                this.$confirm('此操作将永久删除['+this.multipleSelection.length+']条记录, 是否继续?', '提示', {
+                this.$confirm('此操作将永久删除[ '+this.multipleSelection.length+' ]条记录, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -161,9 +158,9 @@
                     this.multipleSelection.forEach(item=>{
                         ids += 'ids=' + item.id+'&';
                     })
-                    this.deleteRequest('/system/basic/pos/' + ids).then(resp => {
+                    this.deleteRequest('/setting/building/' + ids).then(resp => {
                         if (resp) {
-                            this.initPosTable();
+                            this.initBuilding();
                         }
                     })
                 }).catch(() => {
@@ -173,22 +170,20 @@
                     });
                 });
             }
-            }
         }
+    }
 </script>
 
-<style scoped>
-    .posAddInput {
+<style>
+    .addBuilding{
         width: 300px;
-        margin-top: 8px;
+        margin-top: 5px;
     }
-
-    .posTable {
+    .buildTable{
         margin-top: 8px;
-        width: 70%;
+        width: 80%;
     }
-
-    .posDelete {
+    .buildDelete{
         margin-top: 8px;
     }
 </style>

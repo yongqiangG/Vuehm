@@ -23,7 +23,7 @@
                                 <i :class="item.iconCls" style="color:#409eff;margin-right: 8px"></i>
                                 <span>{{item.name}}</span>
                             </template>
-                            <el-menu-item :index="child.path" v-for="(child,childIndex) in item.children" :key="childIndex"> {{child.name}}</el-menu-item>
+                            <el-menu-item :class="child.iconCls" :index="child.path" v-for="(child,childIndex) in item.children" :key="childIndex"> {{child.name}}</el-menu-item>
                         </el-submenu>
                     </el-menu>
                 </el-aside>

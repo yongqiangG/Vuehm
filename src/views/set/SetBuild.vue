@@ -19,17 +19,22 @@
                     class="buildTable">
                 <el-table-column
                         type="selection"
-                        width="55">
+                        width="50">
                 </el-table-column>
                 <el-table-column
                         prop="id"
                         label="ID"
-                        width="70">
+                        width="60">
                 </el-table-column>
                 <el-table-column
                         prop="name"
                         label="楼栋名称"
-                        width="350">
+                        width="250">
+                </el-table-column>
+                <el-table-column
+                        prop="createDate"
+                        label="创建时间"
+                        width="90">
                 </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">

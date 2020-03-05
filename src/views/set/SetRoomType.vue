@@ -72,22 +72,22 @@
                         <el-button
                                 size="mini"
                                 type="primary"
-                                @click="moduleSetting(scope.row)">发送逻辑
+                                @click="sendLogic(scope.row)">发送逻辑
                         </el-button>
                         <el-button
                                 size="mini"
                                 type="primary"
-                                @click="moduleSetting(scope.row)">导入逻辑
+                                @click="imLogic(scope.row)">导入逻辑
                         </el-button>
                         <el-button
                                 size="mini"
                                 type="primary"
-                                @click="moduleSetting(scope.row)">上传逻辑
+                                @click="exLogic(scope.row)">上传逻辑
                         </el-button>
                         <el-button
                                 size="mini"
                                 type="primary"
-                                @click="moduleSetting(scope.row)">导入云端逻辑
+                                @click="imCloudLogic(scope.row)">导入云端逻辑
                         </el-button>
                     </template>
                 </el-table-column>
@@ -95,6 +95,43 @@
             <el-button type="danger" size="small" class="deleteBtn" @click="deleteMany"
                        :disabled="multipleSelection.length==0">批量删除
             </el-button>
+        </div>
+        <div>
+            <el-dialog
+                    title="修改房型"
+                    :visible.sync="dialogVisible"
+                    width="30%">
+                <table>
+                    <tr>
+                        <td><el-tag>房型名称</el-tag></td>
+                        <td><el-select v-model="updateRoomType.isWireless" placeholder="请选择终端类型" style="width: 200px;margin-left: 8px">
+                            <el-option
+                                    v-for="item in machineType"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                            </el-option>
+                        </el-select></td>
+                    </tr>
+                    <tr>
+                        <td><el-tag>房型名称</el-tag></td>
+                        <td><el-input
+                                size="small"
+                                style="width: 200px;margin-left: 8px"
+                                v-model="updateRoomType.name">
+                        </el-input></td>
+                    </tr>
+
+                </table>
+
+
+
+
+                <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="updateSubmit">确 定</el-button>
+  </span>
+            </el-dialog>
         </div>
     </div>
 </template>
@@ -110,13 +147,34 @@
                 },
                 machineType: [{id: 1, name: '无线终端'}, {id: 0, name: '有线终端'}],
                 roomTypes:[],
-                multipleSelection: []
+                multipleSelection: [],
+                dialogVisible:false,
+                updateRoomType:{
+                    isWireless:null,
+                    name:'',
+                    id:null
+                }
             }
         },
         mounted() {
             this.initRoomType();
         },
         methods: {
+            imCloudLogic(row){
+
+            },
+            exLogic(){
+
+            },
+            imLogic(row){
+
+            },
+            sendLogic(row){
+
+            },
+            moduleSetting(row){
+
+            },
             initAdd() {
                 this.roomType = {
                     isWireless: null,
@@ -129,7 +187,6 @@
                 })
             },
             addRoomType() {
-                console.log(this.roomType.isWireless)
                 if (this.roomType.name&&typeof(this.roomType.isWireless)=="number") {
                     this.postRequest('/setting/roomtype/', this.roomType).then(resp => {
                         if (resp) {
@@ -145,13 +202,65 @@
                 this.multipleSelection = val;
             },
             deleteMany(){
-
+                this.$confirm('此操作将永久删除[ ' + this.multipleSelection.length + ' ]条记录, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    let ids = '?';
+                    this.multipleSelection.forEach(item => {
+                        ids += 'ids=' + item.id + '&';
+                    })
+                    this.deleteRequest('/setting/roomtype/' + ids).then(resp => {
+                        if (resp) {
+                            this.initRoomType();
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
             handleEdit(row){
+                this.dialogVisible=true;
+                this.updateRoomType.id=row.id;
+                this.updateRoomType.name=row.name;
+                this.updateRoomType.isWireless=row.isWireless;
 
             },
             handleDelete(row){
-
+                this.$confirm('此操作将永久删除[ ' + row.name + ' ]该房型, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    let ids = '?';
+                    ids += 'ids=' + row.id;
+                    this.deleteRequest('/setting/roomtype/' + ids).then(resp => {
+                        if (resp) {
+                            this.initRoomType();
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            updateSubmit(){
+                if (this.updateRoomType.name && this.updateRoomType.isWireless && this.updateRoomType.id) {
+                    this.putRequest('/setting/setting/', this.updateRoomType).then(resp => {
+                        if (resp) {
+                            this.initRoomType();
+                            this.dialogVisible=false
+                        }
+                    })
+                } else {
+                    this.$message.error('提交参数不能为空');
+                }
             }
         }
     }

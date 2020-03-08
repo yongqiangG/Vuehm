@@ -65,6 +65,7 @@
                     }).then(() => {
                         this.getRequest('/logout');
                         window.sessionStorage.removeItem('user');
+                        window.sessionStorage.removeItem('roomTypes');
                         //清空store中的菜单数据
                         this.$store.commit('initRoutes',[]);
                         this.$router.replace('/');

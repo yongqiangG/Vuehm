@@ -180,7 +180,6 @@
                 multipleSelection:[],
                 total: 0,
                 page: 1,
-                keyword: '',
                 size: 10,
                 loading: false,
                 dialogVisible:false,

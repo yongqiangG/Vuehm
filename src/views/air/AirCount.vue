@@ -28,42 +28,42 @@
                 <el-table-column
                         prop="airs[0].airName"
                         label="空调1"
-                        width="90">
+                        width="80">
                 </el-table-column>
                 <el-table-column
                         prop="airs[1].airName"
                         label="空调2"
-                        width="90">
+                        width="80">
                 </el-table-column>
                 <el-table-column
                         prop="airs[2].airName"
                         label="空调3"
-                        width="90">
+                        width="80">
                 </el-table-column>
                 <el-table-column
                         prop="airs[3].airName"
                         label="空调4"
-                        width="90">
+                        width="80">
                 </el-table-column>
                 <el-table-column
                         prop="airs[4].airName"
                         label="空调5"
-                        width="90">
+                        width="80">
                 </el-table-column>
                 <el-table-column
                         prop="airs[5].airName"
                         label="空调6"
-                        width="90">
+                        width="80">
                 </el-table-column>
                 <el-table-column
                         prop="airs[6].airName"
                         label="空调7"
-                        width="90">
+                        width="80">
                 </el-table-column>
                 <el-table-column
                         prop="airs[7].airName"
                         label="空调8"
-                        width="90">
+                        width="80">
                 </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">

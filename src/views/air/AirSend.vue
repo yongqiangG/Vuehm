@@ -44,11 +44,26 @@
                 </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <el-button
-                                size="mini"
-                                type="primary"
-                                @click="changeStrategy(scope.row)">修改策略
-                        </el-button>
+                        <el-popover
+                                placement="left"
+                                title="修改空调策略"
+                                @show="showPop(scope.row)"
+                                @hide="hidePop(scope.row)"
+                                width="200"
+                                style="margin-right: 10px"
+                                trigger="click">
+                            <div>
+                                <el-select v-model="air.airStrategyId" placeholder="请选择" size="mini">
+                                    <el-option
+                                            v-for="item in airStrategys"
+                                            :key="item.id"
+                                            :label="item.name"
+                                            :value="item.id">
+                                    </el-option>
+                                </el-select>
+                            </div>
+                            <el-button slot="reference" type="danger" size="mini">修改策略</el-button>
+                        </el-popover>
                         <el-button
                                 size="mini"
                                 type="success"
@@ -67,13 +82,44 @@
         data() {
             return {
                 multipleSelection: [],
-                airs: []
-            }
+                airs: [],
+                airStrategys: [],
+                air: {
+                    id: null,
+                    airStrategyId: null,
+                },
+                currentStrategy: null,
+        }
         },
         mounted() {
             this.initAirs();
+            this.initAirStartegys();
         },
         methods: {
+            hidePop(row) {
+                    this.putRequest('/air/send/', this.air).then(resp => {
+                        if (resp) {
+                            this.initAirs();
+                        }
+                    })
+            },
+            showPop(row) {
+                this.air.airStrategyId = null;
+                this.air.id = null;
+                if (row) {
+                    this.air.airStrategyId = row.airStrategyId;
+                    this.air.id = row.id
+                }
+            },
+            //获取所有的策略
+            initAirStartegys() {
+                this.getRequest('/air/strategy/').then(resp => {
+                        if (resp) {
+                            this.airStrategys = resp;
+                        }
+                    }
+                )
+            },
             //批量发送
             multiSend() {
 
@@ -88,10 +134,10 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-            handleSend(){
+            handleSend() {
 
             },
-            changeStrategy(){
+            changeStrategy() {
 
             }
         }

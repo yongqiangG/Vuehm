@@ -1,10 +1,25 @@
 <template>
-    <div>固件下载</div>
+    <div>
+        <el-button type="primary" @click="downFw">下载固件</el-button>
+    </div>
 </template>
 
 <script>
     export default {
-        name: "FwDownload"
+        name: "FwDownload",
+        data(){
+            return {
+
+            }
+        },
+        mounted() {
+
+        },
+        methods:{
+            downFw(){
+                window.open('/fw/upload/fwinfo/down/52', '_parent');
+            }
+        }
     }
 </script>
 

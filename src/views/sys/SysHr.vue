@@ -47,12 +47,12 @@
                                 @show="showPop(hr)"
                                 width="200"
                                 trigger="click">
-                            <el-select v-model="selectedRole" multiple placeholder="请选择">
+                            <el-select v-model="selectedRoles" multiple placeholder="请选择">
                                 <el-option
                                         v-for="(r,index) in allRoles"
                                         :key="index"
                                         :label="r.nameZh"
-                                        :value="r.name">
+                                        :value="r.id">
                                 </el-option>
                             </el-select>
                             <el-button slot="reference" icon="el-icon-more" type="text"></el-button>
@@ -73,15 +73,55 @@
                 keyword: '',
                 hrs: [],
                 allRoles:[],
-                selectedRole:''
+                selectedRoles:[],
             }
         },
         mounted() {
             this.initHrs()
         },
         methods: {
-            showPop(){
+            showPop(hr){
                 this.initRoles();
+                let roles = hr.roles;
+                this.selectedRoles = [];
+                roles.forEach(r => {
+                    this.selectedRoles.push(r.id);
+                })
+            },
+            hidePop(hr) {
+                let roles = [];
+                Object.assign(roles, hr.roles);
+                let flag = false;
+                if (roles.length != this.selectedRoles.length) {
+                    flag = true;
+                } else {
+                    for (let i = 0; i < roles.length; i++) {
+                        let role = roles[i];
+                        for (let j = 0; j < this.selectedRoles.length; j++) {
+                            let sr = this.selectedRoles[j];
+                            if (role.id == sr) {
+                                roles.splice(i, 1);
+                                i--;
+                                break;
+                            }
+                        }
+                    }
+                    if (roles.length != 0) {
+                        flag = true;
+                    }
+                }
+                if (flag) {
+                    let url = '/system/hr/role?hrid=' + hr.id;
+                    this.selectedRoles.forEach(sr => {
+                        url += '&rids=' + sr;
+                    });
+                    console.log(url)
+                    this.putRequest(url).then(resp => {
+                        if (resp) {
+                            this.initHrs();
+                        }
+                    });
+                }
             },
             searchBtn() {
 

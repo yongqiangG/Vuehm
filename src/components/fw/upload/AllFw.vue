@@ -2,7 +2,7 @@
     <div>
         <div style="display: flex;justify-content: space-between">
             <div>
-                <el-select v-model="keyWord" placeholder="请选择">
+                <el-select v-model="keyWord" placeholder="请选择固件类型" prefix-icon="el-icon-search" clearable @change="initFws" @clear="initFws">
                     <el-option
                             v-for="item in fwTypes"
                             :key="item.id"
@@ -62,7 +62,7 @@
                 </el-table-column>
                 <el-table-column
                         label="支持功能模块"
-                        width="200">
+                        width="250">
                     <template slot-scope="scope">
                         <div v-if="scope.row.moduleTypes<3">
                             <el-tag v-for="(type,index) in scope.row.moduleTypes"
@@ -73,7 +73,7 @@
                                     title="支持功能列表"
                                     @show="showPop(scope.row)"
                                     @hide="hidePop(scope.row)"
-                                    width="200"
+                                    width="300"
                                     trigger="click">
                                 <el-select v-model="selectedModuleType" multiple placeholder="请选择">
                                     <el-option
@@ -96,7 +96,7 @@
                                     title="支持功能列表"
                                     @show="showPop(scope.row)"
                                     @hide="hidePop(scope.row)"
-                                    width="200"
+                                    width="300"
                                     trigger="click">
                                 <el-select v-model="selectedModuleType" multiple placeholder="请选择">
                                     <el-option
@@ -156,6 +156,15 @@
             <el-button type="danger" size="small" style="margin-top: 8px" @click="deleteMany"
                        :disabled="multipleSelection.length==0">批量删除
             </el-button>
+            <div style="display: flex;justify-content: flex-end">
+                <el-pagination
+                        background
+                        @current-change="currentChange"
+                        @size-change="sizeChange"
+                        layout="sizes, prev, pager, next, jumper, ->, total, slot"
+                        :total="total">
+                </el-pagination>
+            </div>
         </div>
         <el-dialog
                 title="上传新固件"
@@ -275,6 +284,9 @@
         name: "AllFw",
         data() {
             return {
+                total: 0,
+                page: 1,
+                size: 10,
                 fwTypes: [],
                 fws: [],
                 keyWord: null,
@@ -306,9 +318,17 @@
             this.initFws()
         },
         methods: {
+            currentChange(currentPage){
+                this.page=currentPage;
+                this.initFws();
+            },
+            sizeChange(currentSize){
+                this.size=currentSize;
+                this.initFws();
+            },
             updateSubmit(){
                 if(this.updateFwInfo.id&&this.updateFwInfo.fwTypeId){
-                    this.putRequest().then(resp=>{
+                    this.putRequest('/fw/upload/fwinfo/',this.updateFwInfo).then(resp=>{
                         if(resp){
                             this.dialogVisible1=false;
                             this.initFws();
@@ -345,6 +365,8 @@
             },
             showDia() {
                 this.dialogVisible = true
+                this.initFwTypes()
+                this.initModuleType()
             },
             initModuleType() {
                 this.getRequest('fw/upload/mtype/').then(resp => {
@@ -355,6 +377,7 @@
                 )
             },
             showPop(row) {
+                this.initModuleType()
                 this.moreDisabled = true
                 let selected = row.moduleTypes;
                 this.selectedModuleType = [];
@@ -425,9 +448,14 @@
                 })
             },
             initFws() {
-                this.getRequest('/fw/upload/fwinfo/').then(resp => {
+                if(this.keyWord==null){
+                    this.keyWord=''
+                }
+                let url='/fw/upload/fwinfo/?page='+this.page+'&size='+this.size+'&fwTypeId='+this.keyWord;
+                this.getRequest(url).then(resp => {
                     if (resp) {
                         this.fws = resp.obj.data;
+                        this.total=resp.obj.total
                     }
                 })
             },
@@ -452,6 +480,7 @@
                 });
             },
             handleEdit(row) {
+                this.initFwTypes()
                 this.updateFwInfo.name=row.name
                 this.updateFwInfo.remark=row.remark
                 this.updateFwInfo.fwTypeId=row.fwTypeId

@@ -8,7 +8,7 @@
             </el-form-item>
             <el-form-item prop="password">
                 <el-input size="normal" type="text" v-model="loginForm.password" auto-complete="off" placeholder="请输入密码"
-                          @keydown.enter.native="submitLogin"></el-input>
+                          @keydown.enter.native="submitLogin" show-password></el-input>
             </el-form-item>
             <el-checkbox size="normal" v-model="checked" class="loginRemember">记住我</el-checkbox>
             <el-button size="normal" type="primary" style="width:100%" @click="submitLogin">登录</el-button>
@@ -23,8 +23,8 @@
         data() {
             return {
                 loginForm: {
-                    username: 'johnny',
-                    password: 'johnny'
+                    username: '',
+                    password: ''
                 },
                 checked: true,
                 rules: {

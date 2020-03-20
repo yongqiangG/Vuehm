@@ -5,6 +5,7 @@
             <el-tab-pane label="固件类型" name="second"><FwType></FwType></el-tab-pane>
             <el-tab-pane label="支持功能" name="third"><ModuleType></ModuleType></el-tab-pane>
         </el-tabs>
+        <Room :dialogVisible1="true"></Room>
     </div>
 </template>
 
@@ -12,6 +13,7 @@
     import AllFw from "../../components/fw/upload/AllFw";
     import FwType from "../../components/fw/upload/FwType";
     import ModuleType from "../../components/fw/upload/ModuleType";
+    import Room from "../../components/common/room.vue";
 
     export default {
         name: "FwUpload",
@@ -20,10 +22,11 @@
                 activeName:'first',
             }
         },
-        components:{
+        components: {
             AllFw,
             FwType,
-            ModuleType
+            ModuleType,
+            Room,
         }
     }
 </script>

@@ -116,6 +116,7 @@
                             border
                             stripe
                             v-loading="loading"
+                            class="MainTable"
                     >
                         <el-table-column
                                 type="selection"

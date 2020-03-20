@@ -23,10 +23,15 @@
                         width="70">
                 </el-table-column>
                 <el-table-column
+                        label="索引"
+                        type="index"
+                        width="50">
+                </el-table-column>
+               <!-- <el-table-column
                         prop="id"
                         label="ID"
                         width="70">
-                </el-table-column>
+                </el-table-column>-->
                 <el-table-column
                         prop="name"
                         label="固件类型"

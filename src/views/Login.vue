@@ -23,8 +23,8 @@
         data() {
             return {
                 loginForm: {
-                    username: '',
-                    password: ''
+                    username: 'johnny',
+                    password: 'johnny'
                 },
                 checked: true,
                 rules: {

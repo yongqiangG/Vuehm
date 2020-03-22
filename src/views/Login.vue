@@ -43,6 +43,7 @@
                         this.postKeyValueRequest('/doLogin', this.loginForm).then(resp => {
                                 //console.log(resp)
                                 if (resp) {
+                                    this.$store.commit('INIT_CURRENTHR',resp.obj)
                                     //保存用户信息至session
                                     window.sessionStorage.setItem('user', JSON.stringify(resp.obj));
                                     //页面跳转到home

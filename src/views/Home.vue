@@ -3,16 +3,20 @@
         <el-container>
             <el-header class="homeHeader">
                 <div class="title">酒店内控管理系统</div>
-                <el-dropdown class="userinfo" @command="commandHandler">
-  <span class="el-dropdown-link" >
+                <div>
+                    <el-button icon="el-icon-bell" type="text" style="margin-right: 8px;color:#000000;" size="normal"
+                               @click="goChat"></el-button>
+                    <el-dropdown class="userinfo" @command="commandHandler">
+  <span class="el-dropdown-link">
     {{user.name}}<i><img :src="user.userface" alt=""></i>
   </span>
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item command="userinfo">个人中心</el-dropdown-item>
-                        <el-dropdown-item command="setting">设置</el-dropdown-item>
-                        <el-dropdown-item divided command="logout">注销登录</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item command="userinfo">个人中心</el-dropdown-item>
+                            <el-dropdown-item command="setting">设置</el-dropdown-item>
+                            <el-dropdown-item divided command="logout">注销登录</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </div>
             </el-header>
 
             <el-container>
@@ -23,7 +27,9 @@
                                 <i :class="item.iconCls" style="color:#409eff;margin-right: 8px"></i>
                                 <span>{{item.name}}</span>
                             </template>
-                            <el-menu-item :class="child.iconCls" :index="child.path" v-for="(child,childIndex) in item.children" :key="childIndex"> {{child.name}}</el-menu-item>
+                            <el-menu-item :class="child.iconCls" :index="child.path"
+                                          v-for="(child,childIndex) in item.children" :key="childIndex"> {{child.name}}
+                            </el-menu-item>
                         </el-submenu>
                     </el-menu>
                 </el-aside>
@@ -45,19 +51,22 @@
 <script>
     export default {
         name: "Home",
-        data(){
-            return{
-                user:JSON.parse(window.sessionStorage.getItem("user"))
+        data() {
+            return {
+                user: JSON.parse(window.sessionStorage.getItem("user"))
             }
         },
-        computed:{
-            routes(){
+        computed: {
+            routes() {
                 return this.$store.state.routes;
             }
         },
-        methods:{
-            commandHandler(command){
-                if(command=='logout'){
+        methods: {
+            goChat() {
+                this.$router.push('/chat')
+            },
+            commandHandler(command) {
+                if (command == 'logout') {
                     this.$confirm('您确定要退出登录吗, 是否继续?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
@@ -67,7 +76,7 @@
                         window.sessionStorage.removeItem('user');
                         window.sessionStorage.removeItem('roomTypes');
                         //清空store中的菜单数据
-                        this.$store.commit('initRoutes',[]);
+                        this.$store.commit('initRoutes', []);
                         this.$router.replace('/');
                     }).catch(() => {
                         this.$message({
@@ -82,11 +91,11 @@
 </script>
 
 <style scoped>
-    .homeArea{
+    .homeArea {
         margin-top: 10px;
     }
 
-    .homeWelcome{
+    .homeWelcome {
         text-align: center;
         font-size: 50px;
         font-family: 楷体;
@@ -113,15 +122,16 @@
         color: #ffffff;
     }
 
-    .userinfo{
+    .userinfo {
         cursor: pointer;
     }
-    .el-dropdown-link{
+
+    .el-dropdown-link {
         display: flex;
         align-items: center;
     }
 
-    .el-dropdown-link img{
+    .el-dropdown-link img {
         width: 48px;
         height: 48px;
         border-radius: 24px;

@@ -62,6 +62,8 @@ const store = new Vuex.Store({
             context.state.stomp=Stomp.over(new SockJS('/ws/ep'));
             context.state.stomp.connect({},success=>{
                 context.state.stomp.subscribe('/user/queue/chat',msg=>{
+                    let body =msg.body
+                    debugger
                     let recvMsg = JSON.parse(msg.body)
                     //消息提示
                     if(!context.state.currentSession||recvMsg.from!=context.state.currentSession.username){

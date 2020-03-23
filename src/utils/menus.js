@@ -54,6 +54,8 @@ export const formatRoutes = (routes) => {
                     require(['../views/air/' + component + '.vue'], resolve);
                 } else if (component.startsWith("Fw")) {
                     require(['../views/fw/' + component + '.vue'], resolve);
+                }else if (component.startsWith("Func")) {
+                    require(['../views/func/' + component + '.vue'], resolve);
                 } else if (component.startsWith("Home")) {
                     require(['../views/' + component + '.vue'], resolve);
                 }
